@@ -33,6 +33,7 @@ private:
     Node *buildBalancedTree(Node **nodeArray, int start, int end);
     Node *findScapeGoat(Node *node);
     void addNodesToArray(Node *node, Node **nodeArray, int index);
+    int size(Node *node); // Number of nodes in subtree rooted at node
 
 public:
     void insert(int value); // calls insertBSTwithdepth and rebuilds if neccessary
