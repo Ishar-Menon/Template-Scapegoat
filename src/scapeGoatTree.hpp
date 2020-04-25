@@ -29,6 +29,7 @@ private:
     Node *buildBalancedTree(Node **nodeArray, int start, int end);
     Node *findScapeGoat(Node *node);
     int addNodesToArray(Node *node, Node **nodeArray, int index);
+    Node *BSTdeleteNode(Node *root, int key);
     int size(Node *node);
     int log3by2(int value);
     void displayHelper(Node *node, int level);
@@ -205,5 +206,53 @@ void scapeGoatTree::printBT(const std::string &prefix, const Node *node, bool is
         // enter the next tree level - left and right branch
         printBT(prefix + (isLeft ? "│   " : "    "), node->left_, true);
         printBT(prefix + (isLeft ? "│   " : "    "), node->right_, false);
+    }
+}
+
+Node *scapeGoatTree::BSTdeleteNode(Node *root, int key)
+{
+    if (root == nullptr)
+        return root;
+
+    if (key < root->value_)
+        root->left_ = BSTdeleteNode(root->left_, key);
+
+    else if (key > root->value_)
+        root->right_ = BSTdeleteNode(root->right_, key);
+
+    else
+    {
+        if (root->left_ == nullptr)
+        {
+            numberOfNodes--;
+            Node *temp = root->right_;
+            free(root);
+            return temp;
+        }
+        else if (root->right_ == nullptr)
+        {
+            numberOfNodes--;
+            Node *temp = root->left_;
+            free(root);
+            return temp;
+        }
+
+        Node *temp = root->right_;
+        while (temp && temp->left_ != nullptr)
+            temp = temp->left_;
+        root->value_ = temp->value_;
+        root->right_ = BSTdeleteNode(root->right_, temp->value_);
+    }
+    return root;
+}
+
+void scapeGoatTree::remove(int value)
+{
+    root = BSTdeleteNode(root, value);
+
+    if (2 * numberOfNodes < maxNumberOfNodes)
+    {
+        rebuild(root);
+        maxNumberOfNodes = numberOfNodes;
     }
 }
