@@ -14,5 +14,15 @@ int main()
     tree.insert(9);
     tree.insert(6);
     tree.display();
+    tree.remove(6);
+    tree.remove(11);
+    tree.remove(8);
+    tree.display();
+    tree.remove(2);
+    tree.remove(10);
+    tree.remove(3);
+    tree.display();
+    tree.remove(1);
+    tree.display();
     return 0;
 }
