@@ -226,6 +226,8 @@ Node *scapeGoatTree::BSTdeleteNode(Node *root, int key)
         {
             numberOfNodes--;
             Node *temp = root->right_;
+            if (temp)
+                temp->parent_ = root->parent_;
             free(root);
             return temp;
         }
@@ -233,6 +235,8 @@ Node *scapeGoatTree::BSTdeleteNode(Node *root, int key)
         {
             numberOfNodes--;
             Node *temp = root->left_;
+            if (temp)
+                temp->parent_ = root->parent_;
             free(root);
             return temp;
         }
