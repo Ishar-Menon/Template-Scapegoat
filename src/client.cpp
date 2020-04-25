@@ -2,7 +2,7 @@
 
 int main()
 {
-    scapeGoatTree tree;
+    scapeGoatTree<int> tree;
     tree.insert(10);
     tree.insert(2);
     tree.insert(1);

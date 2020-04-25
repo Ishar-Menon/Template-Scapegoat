@@ -1,39 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+template <typename T>
+class scapeGoatTree;
+
+template <typename T>
 class Node
 {
 private:
-    int value_;
-    Node *left_;
-    Node *right_;
-    Node *parent_;
-    friend class scapeGoatTree;
+    T value_;
+    Node<T> *left_;
+    Node<T> *right_;
+    Node<T> *parent_;
+    friend class scapeGoatTree<T>;
 
 public:
-    Node(int value = 0, Node *left = nullptr, Node *right = nullptr, Node *parent = nullptr)
+    Node(T value, Node<T> *left = nullptr, Node<T> *right = nullptr, Node<T> *parent = nullptr)
         : value_(value), left_(left), right_(right), parent_(parent)
     {
     }
 };
-
+template <typename T>
 class scapeGoatTree
 {
 private:
-    Node *root;
+    Node<T> *root;
     int numberOfNodes;
     int maxNumberOfNodes; // numberOfNodes <= maxNumberOfNodes <= 2*numberOfNodes
-    int insertBSTwithdepth(Node *node);
+    int insertBSTwithdepth(Node<T> *node);
     void removeBST(int value);
-    void rebuild(Node *node);
-    Node *buildBalancedTree(Node **nodeArray, int start, int end);
-    Node *findScapeGoat(Node *node);
-    int addNodesToArray(Node *node, Node **nodeArray, int index);
-    Node *BSTdeleteNode(Node *root, int key);
-    int size(Node *node);
+    void rebuild(Node<T> *node);
+    Node<T> *buildBalancedTree(Node<T> **nodeArray, int start, int end);
+    Node<T> *findScapeGoat(Node<T> *node);
+    int addNodesToArray(Node<T> *node, Node<T> **nodeArray, int index);
+    Node<T> *BSTdeleteNode(Node<T> *root, int key);
+    int size(Node<T> *node);
     int log3by2(int value);
-    void displayHelper(Node *node, int level);
-    void printBT(const std::string &prefix, const Node *node, bool isLeft);
+    void displayHelper(Node<T> *node, int level);
+    void printBT(const std::string &prefix, const Node<T> *node, bool isLeft);
 
 public:
     scapeGoatTree()
@@ -50,8 +54,8 @@ public:
  * Function definitions
  * --------------------
  */
-
-int scapeGoatTree::insertBSTwithdepth(Node *node)
+template <typename T>
+int scapeGoatTree<T>::insertBSTwithdepth(Node<T> *node)
 {
     numberOfNodes += 1;
     maxNumberOfNodes += 1;
@@ -62,8 +66,8 @@ int scapeGoatTree::insertBSTwithdepth(Node *node)
         return 0;
     }
 
-    Node *current = root;
-    Node *prev = nullptr;
+    Node<T> *current = root;
+    Node<T> *prev = nullptr;
     int depth = 0;
     while (current != nullptr)
     {
@@ -85,14 +89,14 @@ int scapeGoatTree::insertBSTwithdepth(Node *node)
 
     return depth;
 }
-
-void scapeGoatTree::rebuild(Node *node)
+template <typename T>
+void scapeGoatTree<T>::rebuild(Node<T> *node)
 {
     int subTreSize = size(node);
-    Node **nodeArray = new Node *[subTreSize];
+    Node<T> **nodeArray = new Node<T> *[subTreSize];
     addNodesToArray(node, nodeArray, 0);
 
-    Node *parent = node->parent_;
+    Node<T> *parent = node->parent_;
 
     if (parent == nullptr)
     {
@@ -109,8 +113,8 @@ void scapeGoatTree::rebuild(Node *node)
         parent->right_->parent_ = parent;
     }
 }
-
-Node *scapeGoatTree::buildBalancedTree(Node **nodeArray, int start, int end)
+template <typename T>
+Node<T> *scapeGoatTree<T>::buildBalancedTree(Node<T> **nodeArray, int start, int end)
 {
     if (end < start)
         return nullptr;
@@ -128,16 +132,16 @@ Node *scapeGoatTree::buildBalancedTree(Node **nodeArray, int start, int end)
 
     return nodeArray[mid];
 }
-
-Node *scapeGoatTree::findScapeGoat(Node *node)
+template <typename T>
+Node<T> *scapeGoatTree<T>::findScapeGoat(Node<T> *node)
 {
     while ((3 * size(node)) <= (2 * size(node->parent_)))
         node = node->parent_;
 
     return node->parent_;
 }
-
-int scapeGoatTree::addNodesToArray(Node *node, Node **nodeArray, int index)
+template <typename T>
+int scapeGoatTree<T>::addNodesToArray(Node<T> *node, Node<T> **nodeArray, int index)
 {
     if (node == nullptr)
         return index;
@@ -148,7 +152,8 @@ int scapeGoatTree::addNodesToArray(Node *node, Node **nodeArray, int index)
 }
 
 // Number of nodes in subtree rooted at node
-int scapeGoatTree::size(Node *node)
+template <typename T>
+int scapeGoatTree<T>::size(Node<T> *node)
 {
     if (node == nullptr)
         return 0;
@@ -156,12 +161,14 @@ int scapeGoatTree::size(Node *node)
     return size(node->left_) + size(node->right_) + 1;
 }
 
-inline int scapeGoatTree::log3by2(int value)
+template <typename T>
+inline int scapeGoatTree<T>::log3by2(int value)
 {
     return (int)floor(log(value) / log(3.0 / 2.0));
 }
 
-void scapeGoatTree::displayHelper(Node *node, int level)
+template <typename T>
+void scapeGoatTree<T>::displayHelper(Node<T> *node, int level)
 {
     if (node == nullptr)
         return;
@@ -172,27 +179,30 @@ void scapeGoatTree::displayHelper(Node *node, int level)
 }
 
 // calls insertBSTwithdepth and rebuilds if neccessary
-void scapeGoatTree::insert(int value)
+template <typename T>
+void scapeGoatTree<T>::insert(int value)
 {
-    Node *newNode = new Node(value);
+    Node<T> *newNode = new Node<T>(value);
     int nodeDepth = insertBSTwithdepth(newNode);
 
     // Check if height is valid
     if (nodeDepth != 0 && nodeDepth > log3by2(maxNumberOfNodes))
     {
         // Find scapegoat and rebuild
-        Node *scapeGoat = findScapeGoat(newNode);
+        Node<T> *scapeGoat = findScapeGoat(newNode);
         rebuild(scapeGoat);
     }
 }
 
-void scapeGoatTree::display()
+template <typename T>
+void scapeGoatTree<T>::display()
 {
     // displayHelper(root, 0);
     printBT("", root, false);
 }
 
-void scapeGoatTree::printBT(const std::string &prefix, const Node *node, bool isLeft)
+template <typename T>
+void scapeGoatTree<T>::printBT(const std::string &prefix, const Node<T> *node, bool isLeft)
 {
     if (node != nullptr)
     {
@@ -209,7 +219,8 @@ void scapeGoatTree::printBT(const std::string &prefix, const Node *node, bool is
     }
 }
 
-Node *scapeGoatTree::BSTdeleteNode(Node *root, int key)
+template <typename T>
+Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, int key)
 {
     if (root == nullptr)
         return root;
@@ -225,7 +236,7 @@ Node *scapeGoatTree::BSTdeleteNode(Node *root, int key)
         if (root->left_ == nullptr)
         {
             numberOfNodes--;
-            Node *temp = root->right_;
+            Node<T> *temp = root->right_;
             if (temp)
                 temp->parent_ = root->parent_;
             free(root);
@@ -234,14 +245,14 @@ Node *scapeGoatTree::BSTdeleteNode(Node *root, int key)
         else if (root->right_ == nullptr)
         {
             numberOfNodes--;
-            Node *temp = root->left_;
+            Node<T> *temp = root->left_;
             if (temp)
                 temp->parent_ = root->parent_;
             free(root);
             return temp;
         }
 
-        Node *temp = root->right_;
+        Node<T> *temp = root->right_;
         while (temp && temp->left_ != nullptr)
             temp = temp->left_;
         root->value_ = temp->value_;
@@ -250,7 +261,8 @@ Node *scapeGoatTree::BSTdeleteNode(Node *root, int key)
     return root;
 }
 
-void scapeGoatTree::remove(int value)
+template <typename T>
+void scapeGoatTree<T>::remove(int value)
 {
     root = BSTdeleteNode(root, value);
 
