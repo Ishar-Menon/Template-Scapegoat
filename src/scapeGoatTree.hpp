@@ -32,6 +32,7 @@ private:
     int size(Node *node);
     int log3by2(int value);
     void displayHelper(Node *node, int level);
+    void printBT(const std::string &prefix, const Node *node, bool isLeft);
 
 public:
     scapeGoatTree()
@@ -186,5 +187,23 @@ void scapeGoatTree::insert(int value)
 
 void scapeGoatTree::display()
 {
-    displayHelper(root, 0);
+    // displayHelper(root, 0);
+    printBT("", root, false);
+}
+
+void scapeGoatTree::printBT(const std::string &prefix, const Node *node, bool isLeft)
+{
+    if (node != nullptr)
+    {
+        std::cout << prefix;
+
+        std::cout << (isLeft ? "├──" : "└──");
+
+        // print the value of the node
+        std::cout << node->value_ << std::endl;
+
+        // enter the next tree level - left and right branch
+        printBT(prefix + (isLeft ? "│   " : "    "), node->left_, true);
+        printBT(prefix + (isLeft ? "│   " : "    "), node->right_, false);
+    }
 }
