@@ -38,16 +38,22 @@ private:
     int log3by2(int value);
     void displayHelper(Node<T> *node, int level);
     void printBT(const std::string &prefix, const Node<T> *node, bool isLeft);
+    void setMinMax();
 
 public:
     scapeGoatTree()
-        : numberOfNodes(0), maxNumberOfNodes(0), root(nullptr)
+        : numberOfNodes(0), maxNumberOfNodes(0), root(nullptr), minNode(nullptr), maxNode(nullptr)
     {
     }
     void remove(int value); // calls  removeBST and rebuilds if neccessary
     void search(int value);
     void insert(int value);
     void display();
+    T getMax();
+    T getMin();
+
+    Node<T> *minNode;
+    Node<T> *maxNode;
 
     class Iterator
     {
@@ -62,7 +68,7 @@ public:
         using reference = T &;
         explicit Iterator(Node<T> *node_it) : node_it_(node_it) {}
         bool operator==(const Iterator &rhs) const { return node_it_ == rhs.node_it_; }
-        bool operator!=(const Iterator &rhs) const { return !(this == rhs); }
+        bool operator!=(const Iterator &rhs) const { return !(*this == rhs); }
         reference operator*() { return node_it_->value_; }
         Iterator &operator++()
         {
@@ -101,7 +107,7 @@ public:
         using reference = T &;
         explicit revIterator(Node<T> *node_it) : node_it_(node_it) {}
         bool operator==(const revIterator &rhs) const { return node_it_ == rhs.node_it_; }
-        bool operator!=(const revIterator &rhs) const { return !(this == rhs); }
+        bool operator!=(const revIterator &rhs) const { return !(*this == rhs); }
         reference operator*() { return node_it_->value_; }
         revIterator &operator++()
         {
@@ -127,6 +133,10 @@ public:
         }
     };
 
+    Iterator begin();
+    Iterator end();
+    revIterator rbegin();
+    revIterator rend();
 };
 
 /**
@@ -136,12 +146,14 @@ public:
 template <typename T>
 int scapeGoatTree<T>::insertBSTwithdepth(Node<T> *node)
 {
-    numberOfNodes += 1;
-    maxNumberOfNodes += 1;
 
     if (root == nullptr)
     {
         root = node;
+        minNode = root;
+        maxNode = root;
+        numberOfNodes += 1;
+        maxNumberOfNodes += 1;
         return 0;
     }
 
@@ -155,16 +167,31 @@ int scapeGoatTree<T>::insertBSTwithdepth(Node<T> *node)
 
         if (node->value_ < current->value_)
             current = current->left_;
-        else
+        else if (node->value_ > current->value_)
             current = current->right_;
+        else
+            return -1;
     }
 
     if (node->value_ < prev->value_)
+    {
         prev->left_ = node;
+        if (node->value_ < minNode->value_)
+        {
+            minNode = node;
+        }
+    }
     else
+    {
         prev->right_ = node;
-
+        if (node->value_ > maxNode->value_)
+        {
+            maxNode = node;
+        }
+    }
     node->parent_ = prev;
+    numberOfNodes += 1;
+    maxNumberOfNodes += 1;
 
     return depth;
 }
@@ -264,8 +291,10 @@ void scapeGoatTree<T>::insert(int value)
     Node<T> *newNode = new Node<T>(value);
     int nodeDepth = insertBSTwithdepth(newNode);
 
+    cout << numberOfNodes << " " << maxNumberOfNodes << endl;
+
     // Check if height is valid
-    if (nodeDepth != 0 && nodeDepth > log3by2(maxNumberOfNodes))
+    if (nodeDepth > 0 && nodeDepth > log3by2(maxNumberOfNodes))
     {
         // Find scapegoat and rebuild
         Node<T> *scapeGoat = findScapeGoat(newNode);
@@ -350,4 +379,46 @@ void scapeGoatTree<T>::remove(int value)
         rebuild(root);
         maxNumberOfNodes = numberOfNodes;
     }
+
+    setMinMax();
 }
+
+template <typename T>
+T scapeGoatTree<T>::getMax() { return maxNode->value_; }
+
+template <typename T>
+T scapeGoatTree<T>::getMin() { return minNode->value_; }
+
+template <typename T>
+void scapeGoatTree<T>::setMinMax()
+{
+    Node<T> *current = root;
+    if (current == nullptr)
+    {
+        minNode = maxNode = nullptr;
+        return;
+    }
+
+    while (current->left_ != NULL)
+        current = current->left_;
+
+    minNode = current;
+    current = root;
+
+    while (current->right_ != NULL)
+        current = current->right_;
+
+    maxNode = current;
+}
+
+template <typename T>
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::begin() { return scapeGoatTree<T>::Iterator(minNode); }
+
+template <typename T>
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::end() { return scapeGoatTree<T>::Iterator(nullptr); }
+
+template <typename T>
+typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rbegin() { return scapeGoatTree<T>::revIterator(maxNode); }
+
+template <typename T>
+typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rend() { return scapeGoatTree<T>::revIterator(nullptr); }
