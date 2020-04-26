@@ -48,6 +48,85 @@ public:
     void search(int value);
     void insert(int value);
     void display();
+
+    class Iterator
+    {
+    private:
+        Node<T> *node_it_;
+
+    public:
+        using iterator_category = bidirectional_iterator_tag;
+        using value_type = T;
+        using difference_type = int;
+        using pointer = T *;
+        using reference = T &;
+        explicit Iterator(Node<T> *node_it) : node_it_(node_it) {}
+        bool operator==(const Iterator &rhs) const { return node_it_ == rhs.node_it_; }
+        bool operator!=(const Iterator &rhs) const { return !(this == rhs); }
+        reference operator*() { return node_it_->value_; }
+        Iterator &operator++()
+        {
+            // TODO - inorder succesor of node pointed by iterator;
+            return *this;
+        }
+        Iterator operator++(int)
+        {
+            Iterator temp(*this);
+            ++(*this);
+            return temp;
+        }
+        Iterator &operator--()
+        {
+            // TODO - inorder predecesor of node pointed by iterator;
+            return *this;
+        }
+        Iterator operator--(int)
+        {
+            Iterator temp(*this);
+            --(*this);
+            return temp;
+        }
+    };
+
+    class revIterator
+    {
+    private:
+        Node<T> *node_it_;
+
+    public:
+        using iterator_category = bidirectional_iterator_tag;
+        using value_type = T;
+        using difference_type = int;
+        using pointer = T *;
+        using reference = T &;
+        explicit revIterator(Node<T> *node_it) : node_it_(node_it) {}
+        bool operator==(const revIterator &rhs) const { return node_it_ == rhs.node_it_; }
+        bool operator!=(const revIterator &rhs) const { return !(this == rhs); }
+        reference operator*() { return node_it_->value_; }
+        revIterator &operator++()
+        {
+            // TODO - inorder succesor of node pointed by iterator;
+            return *this;
+        }
+        revIterator operator++(int)
+        {
+            revIterator temp(*this);
+            ++(*this);
+            return temp;
+        }
+        revIterator &operator--()
+        {
+            // TODO - inorder predecesor of node pointed by iterator;
+            return *this;
+        }
+        revIterator operator--(int)
+        {
+            revIterator temp(*this);
+            --(*this);
+            return temp;
+        }
+    };
+
 };
 
 /**
