@@ -35,6 +35,8 @@ private:
     Node<T> *root;
     int numberOfNodes;
     int maxNumberOfNodes; // numberOfNodes <= maxNumberOfNodes <= 2*numberOfNodes
+    class Iterator;
+    class revIterator;
     int insertBSTwithdepth(Node<T> *node);
     void removeBST(int value);
     void rebuild(Node<T> *node);
@@ -53,21 +55,21 @@ private:
     static Node<T> *minValue(Node<T> *root);
     static Node<T> *inorder_predecessor(Node<T> *current, Node<T> *root);
     static Node<T> *maxValue(Node<T> *root);
+    Iterator searchHelper(Node<T> *root, int value);
 
 public:
     scapeGoatTree()
         : numberOfNodes(0), maxNumberOfNodes(0), root(nullptr), minNode(nullptr), maxNode(nullptr)
     {
     }
-    void remove(int value); // calls  removeBST and rebuilds if neccessary
-    void search(int value);
+
+    void remove(int value);
+    Iterator search(int value);
     void insert(int value);
     void display();
+
     T getMaxValue();
     T getMinValue();
-
-    class Iterator;
-    class revIterator;
 
     using iterator = Iterator;
     using const_iterator = Iterator;
@@ -320,6 +322,24 @@ void scapeGoatTree<T>::remove(int value)
     }
 
     setMinMax();
+}
+
+template <typename T>
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::searchHelper(Node<T> *root, int value)
+{
+    if (root == nullptr || root->value_ == value)
+        return scapeGoatTree<T>::Iterator(root, this->root);
+
+    if (root->value_ < value)
+        return searchHelper(root->right_, value);
+
+    return searchHelper(root->left_, value);
+}
+
+template <typename T>
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::search(int value)
+{
+    return searchHelper(root, value);
 }
 
 template <typename T>

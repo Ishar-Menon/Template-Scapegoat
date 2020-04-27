@@ -42,6 +42,10 @@ int main()
     tree.remove(11);
     tree.remove(8);
     tree.display();
+    auto itr_10 = tree.search(10);
+    cout << "(10) " << (itr_10 != tree.end() ? "" : "Not ") << "Found\n";
+    auto itr_11 = tree.search(11);
+    cout << "(11) " << (itr_11 != tree.end() ? "" : "Not ") << "Found\n";
     tree.remove(2);
     tree.remove(10);
     tree.remove(3);
