@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+#pragma once
+#include <iostream>
+#include <cmath>
+
 using namespace std;
 
 template <typename T>
@@ -19,7 +22,12 @@ public:
         : value_(value), left_(left), right_(right), parent_(parent)
     {
     }
+    Node(Node &rhs)
+        : value_(rhs.value_), left_(rhs.left_), right_(rhs.right_), parent_(rhs.parent_)
+    {
+    }
 };
+
 template <typename T>
 class scapeGoatTree
 {
@@ -39,6 +47,12 @@ private:
     void displayHelper(Node<T> *node, int level);
     void printBT(const std::string &prefix, const Node<T> *node, bool isLeft);
     void setMinMax();
+    Node<T> *minNode;
+    Node<T> *maxNode;
+    static Node<T> *inorder_successor(Node<T> *current, Node<T> *root);
+    static Node<T> *minValue(Node<T> *root);
+    static Node<T> *inorder_predecessor(Node<T> *current, Node<T> *root);
+    static Node<T> *maxValue(Node<T> *root);
 
 public:
     scapeGoatTree()
@@ -49,89 +63,16 @@ public:
     void search(int value);
     void insert(int value);
     void display();
-    T getMax();
-    T getMin();
+    T getMaxValue();
+    T getMinValue();
 
-    Node<T> *minNode;
-    Node<T> *maxNode;
+    class Iterator;
+    class revIterator;
 
-    class Iterator
-    {
-    private:
-        Node<T> *node_it_;
-
-    public:
-        using iterator_category = bidirectional_iterator_tag;
-        using value_type = T;
-        using difference_type = int;
-        using pointer = T *;
-        using reference = T &;
-        explicit Iterator(Node<T> *node_it) : node_it_(node_it) {}
-        bool operator==(const Iterator &rhs) const { return node_it_ == rhs.node_it_; }
-        bool operator!=(const Iterator &rhs) const { return !(*this == rhs); }
-        reference operator*() { return node_it_->value_; }
-        Iterator &operator++()
-        {
-            // TODO - inorder succesor of node pointed by iterator;
-            return *this;
-        }
-        Iterator operator++(int)
-        {
-            Iterator temp(*this);
-            ++(*this);
-            return temp;
-        }
-        Iterator &operator--()
-        {
-            // TODO - inorder predecesor of node pointed by iterator;
-            return *this;
-        }
-        Iterator operator--(int)
-        {
-            Iterator temp(*this);
-            --(*this);
-            return temp;
-        }
-    };
-
-    class revIterator
-    {
-    private:
-        Node<T> *node_it_;
-
-    public:
-        using iterator_category = bidirectional_iterator_tag;
-        using value_type = T;
-        using difference_type = int;
-        using pointer = T *;
-        using reference = T &;
-        explicit revIterator(Node<T> *node_it) : node_it_(node_it) {}
-        bool operator==(const revIterator &rhs) const { return node_it_ == rhs.node_it_; }
-        bool operator!=(const revIterator &rhs) const { return !(*this == rhs); }
-        reference operator*() { return node_it_->value_; }
-        revIterator &operator++()
-        {
-            // TODO - inorder succesor of node pointed by iterator;
-            return *this;
-        }
-        revIterator operator++(int)
-        {
-            revIterator temp(*this);
-            ++(*this);
-            return temp;
-        }
-        revIterator &operator--()
-        {
-            // TODO - inorder predecesor of node pointed by iterator;
-            return *this;
-        }
-        revIterator operator--(int)
-        {
-            revIterator temp(*this);
-            --(*this);
-            return temp;
-        }
-    };
+    using iterator = Iterator;
+    using const_iterator = Iterator;
+    using reverse_iterator = revIterator;
+    using const_reverse_iterator = revIterator;
 
     Iterator begin();
     Iterator end();
@@ -291,8 +232,6 @@ void scapeGoatTree<T>::insert(int value)
     Node<T> *newNode = new Node<T>(value);
     int nodeDepth = insertBSTwithdepth(newNode);
 
-    cout << numberOfNodes << " " << maxNumberOfNodes << endl;
-
     // Check if height is valid
     if (nodeDepth > 0 && nodeDepth > log3by2(maxNumberOfNodes))
     {
@@ -305,8 +244,8 @@ void scapeGoatTree<T>::insert(int value)
 template <typename T>
 void scapeGoatTree<T>::display()
 {
-    // displayHelper(root, 0);
     printBT("", root, false);
+    cout << '\n';
 }
 
 template <typename T>
@@ -347,7 +286,7 @@ Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, int key)
             Node<T> *temp = root->right_;
             if (temp)
                 temp->parent_ = root->parent_;
-            free(root);
+            delete root;
             return temp;
         }
         else if (root->right_ == nullptr)
@@ -356,7 +295,7 @@ Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, int key)
             Node<T> *temp = root->left_;
             if (temp)
                 temp->parent_ = root->parent_;
-            free(root);
+            delete root;
             return temp;
         }
 
@@ -384,10 +323,10 @@ void scapeGoatTree<T>::remove(int value)
 }
 
 template <typename T>
-T scapeGoatTree<T>::getMax() { return maxNode->value_; }
+T scapeGoatTree<T>::getMaxValue() { return maxNode->value_; }
 
 template <typename T>
-T scapeGoatTree<T>::getMin() { return minNode->value_; }
+T scapeGoatTree<T>::getMinValue() { return minNode->value_; }
 
 template <typename T>
 void scapeGoatTree<T>::setMinMax()
@@ -399,26 +338,107 @@ void scapeGoatTree<T>::setMinMax()
         return;
     }
 
-    while (current->left_ != NULL)
+    while (current->left_ != nullptr)
         current = current->left_;
 
     minNode = current;
     current = root;
 
-    while (current->right_ != NULL)
+    while (current->right_ != nullptr)
         current = current->right_;
 
     maxNode = current;
 }
 
 template <typename T>
-typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::begin() { return scapeGoatTree<T>::Iterator(minNode); }
+Node<T> *scapeGoatTree<T>::minValue(Node<T> *root)
+{
+    while (root && root->left_ != nullptr)
+    {
+        root = root->left_;
+    }
+    return root;
+}
 
 template <typename T>
-typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::end() { return scapeGoatTree<T>::Iterator(nullptr); }
+Node<T> *scapeGoatTree<T>::inorder_successor(Node<T> *current, Node<T> *root)
+{
+    if (current->right_ != nullptr)
+        return minValue(current->right_);
+
+    Node<T> *successor = nullptr;
+    while (root != nullptr)
+    {
+        if (current->value_ < root->value_)
+        {
+            successor = root;
+            root = root->left_;
+        }
+        else if (current->value_ > root->value_)
+            root = root->right_;
+        else
+            break;
+    }
+
+    return successor;
+}
 
 template <typename T>
-typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rbegin() { return scapeGoatTree<T>::revIterator(maxNode); }
+Node<T> *scapeGoatTree<T>::maxValue(Node<T> *root)
+{
+    while (root && root->right_ != nullptr)
+    {
+        root = root->right_;
+    }
+    return root;
+}
 
 template <typename T>
-typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rend() { return scapeGoatTree<T>::revIterator(nullptr); }
+Node<T> *scapeGoatTree<T>::inorder_predecessor(Node<T> *current, Node<T> *root)
+{
+
+    if (current->left_ != nullptr)
+        return maxValue(current->left_);
+
+    Node<T> *predecessor = nullptr;
+
+    while (root != nullptr)
+    {
+        if (current->value_ > root->value_)
+        {
+            predecessor = root;
+            root = root->right_;
+        }
+        else if (current->value_ < root->value_)
+            root = root->left_;
+        else
+            break;
+    }
+    return predecessor;
+}
+
+#include "iterators.hpp"
+
+template <typename T>
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::begin()
+{
+    return scapeGoatTree<T>::Iterator(minNode, root);
+}
+
+template <typename T>
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::end()
+{
+    return scapeGoatTree<T>::Iterator(nullptr, root);
+}
+
+template <typename T>
+typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rbegin()
+{
+    return scapeGoatTree<T>::revIterator(maxNode, root);
+}
+
+template <typename T>
+typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rend()
+{
+    return scapeGoatTree<T>::revIterator(nullptr, root);
+}
