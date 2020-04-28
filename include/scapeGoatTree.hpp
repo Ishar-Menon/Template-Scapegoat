@@ -37,7 +37,7 @@ private:
     class Iterator;
     class revIterator;
     int insertBSTwithdepth(Node<T> *node, vector<Node<T> *> &path);
-    void removeBST(int value);
+    void removeBST(T value);
     void rebuild(vector<Node<T> *> &path, int index);
     Node<T> *buildBalancedTree(Node<T> **nodeArray, int start, int end);
     int findScapeGoat(Node<T> *node, vector<Node<T> *> &path);
@@ -85,9 +85,9 @@ public:
         std::swap(first.maxNumberOfNodes, second.maxNumberOfNodes);
     }
 
-    void remove(int value);
-    Iterator search(int value);
-    void insert(int value);
+    void remove(T value);
+    Iterator search(T value);
+    void insert(T value);
     void display();
 
     T getMaxValue();
@@ -267,7 +267,7 @@ void scapeGoatTree<T>::displayHelper(Node<T> *node, int level)
 
 // calls insertBSTwithdepth and rebuilds if neccessary
 template <typename T>
-void scapeGoatTree<T>::insert(int value)
+void scapeGoatTree<T>::insert(T value)
 {
     Node<T> *newNode = new Node<T>(value);
     vector<Node<T> *> path;
@@ -346,7 +346,7 @@ Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, int key)
 }
 
 template <typename T>
-void scapeGoatTree<T>::remove(int value)
+void scapeGoatTree<T>::remove(T value)
 {
     root = BSTdeleteNode(root, value);
 
@@ -373,7 +373,7 @@ typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::searchHelper(Node<T> *root
 }
 
 template <typename T>
-typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::search(int value)
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::search(T value)
 {
     return searchHelper(root, root, value);
 }
