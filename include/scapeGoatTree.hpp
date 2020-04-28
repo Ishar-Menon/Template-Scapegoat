@@ -500,23 +500,23 @@ void scapeGoatTree<T>::deleteTree(Node<T> *root)
 template <typename T>
 typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::begin()
 {
-    return scapeGoatTree<T>::Iterator(minNode, root);
+    return scapeGoatTree<T>::Iterator(minNode, *this);
 }
 
 template <typename T>
 typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::end()
 {
-    return scapeGoatTree<T>::Iterator(nullptr, root);
+    return scapeGoatTree<T>::Iterator(nullptr, *this);
 }
 
 template <typename T>
 typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rbegin()
 {
-    return scapeGoatTree<T>::revIterator(maxNode, root);
+    return scapeGoatTree<T>::revIterator(maxNode, *this);
 }
 
 template <typename T>
 typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rend()
 {
-    return scapeGoatTree<T>::revIterator(nullptr, root);
+    return scapeGoatTree<T>::revIterator(nullptr, *this);
 }
