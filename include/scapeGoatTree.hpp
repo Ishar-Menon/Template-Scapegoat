@@ -42,7 +42,7 @@ private:
     Node<T> *buildBalancedTree(Node<T> **nodeArray, int start, int end);
     int findScapeGoat(Node<T> *node, vector<Node<T> *> &path);
     int addNodesToArray(Node<T> *node, Node<T> **nodeArray, int index);
-    Node<T> *BSTdeleteNode(Node<T> *root, int key);
+    Node<T> *BSTdeleteNode(Node<T> *root, T key);
     int size(Node<T> *node);
     int log3by2(int value);
     void displayHelper(Node<T> *node, int level);
@@ -52,7 +52,7 @@ private:
     static Node<T> *minValue(Node<T> *root);
     static Node<T> *inorder_predecessor(Node<T> *current, Node<T> *root);
     static Node<T> *maxValue(Node<T> *root);
-    Iterator searchHelper(Node<T> *root, Node<T> *current, int value);
+    Iterator searchHelper(Node<T> *root, Node<T> *current, T value);
     static Node<T> *duplicateTree(Node<T> *root);
     static void deleteTree(Node<T> *root);
 
@@ -308,7 +308,7 @@ void scapeGoatTree<T>::printBT(const std::string &prefix, const Node<T> *node, b
 }
 
 template <typename T>
-Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, int key)
+Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, T key)
 {
     if (root == nullptr)
         return root;
@@ -361,7 +361,7 @@ void scapeGoatTree<T>::remove(T value)
 }
 
 template <typename T>
-typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::searchHelper(Node<T> *root, Node<T> *current, int value)
+typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::searchHelper(Node<T> *root, Node<T> *current, T value)
 {
     if (current == nullptr || current->value_ == value)
         return scapeGoatTree<T>::Iterator(current, *this);
