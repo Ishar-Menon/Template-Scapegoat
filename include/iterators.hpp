@@ -13,7 +13,7 @@ public:
 	using difference_type = int;
 	using pointer = T *;
 	using reference = T &;
-	explicit Iterator(Node<T> *node_it, Node<T> *root) : node_it_(node_it), root(root) {}
+	explicit Iterator(Node<T> *node_it = nullptr, Node<T> *root = nullptr) : node_it_(node_it), root(root) {}
 	bool operator==(const Iterator &rhs) const { return node_it_ == rhs.node_it_; }
 	bool operator!=(const Iterator &rhs) const { return !(*this == rhs); }
 	reference operator*() { return node_it_->value_; }
@@ -35,7 +35,7 @@ public:
 	using difference_type = int;
 	using pointer = T *;
 	using reference = T &;
-	explicit revIterator(Node<T> *node_it, Node<T> *root) : node_it_(node_it), root(root) {}
+	explicit revIterator(Node<T> *node_it = nullptr, Node<T> *root = nullptr) : node_it_(node_it), root(root) {}
 	bool operator==(const revIterator &rhs) const { return node_it_ == rhs.node_it_; }
 	bool operator!=(const revIterator &rhs) const { return !(*this == rhs); }
 	reference operator*() { return node_it_->value_; }
