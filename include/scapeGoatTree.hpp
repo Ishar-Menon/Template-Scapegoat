@@ -42,7 +42,7 @@ private:
     Node<T> *buildBalancedTree(Node<T> **nodeArray, int start, int end);
     int findScapeGoat(Node<T> *node, vector<Node<T> *> &path);
     int addNodesToArray(Node<T> *node, Node<T> **nodeArray, int index);
-    Node<T> *BSTdeleteNode(Node<T> *root, T key);
+    Node<T> *BSTdeleteNode(Node<T> *root, T value);
     int size(Node<T> *node);
     int log3by2(int value);
     void displayHelper(Node<T> *node, int level);
@@ -308,16 +308,16 @@ void scapeGoatTree<T>::printBT(const std::string &prefix, const Node<T> *node, b
 }
 
 template <typename T>
-Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, T key)
+Node<T> *scapeGoatTree<T>::BSTdeleteNode(Node<T> *root, T value)
 {
     if (root == nullptr)
         return root;
 
-    if (key < root->value_)
-        root->left_ = BSTdeleteNode(root->left_, key);
+    if (value < root->value_)
+        root->left_ = BSTdeleteNode(root->left_, value);
 
-    else if (key > root->value_)
-        root->right_ = BSTdeleteNode(root->right_, key);
+    else if (value > root->value_)
+        root->right_ = BSTdeleteNode(root->right_, value);
 
     else
     {
@@ -364,7 +364,7 @@ template <typename T>
 typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::searchHelper(Node<T> *root, Node<T> *current, T value)
 {
     if (current == nullptr || current->value_ == value)
-        return scapeGoatTree<T>::Iterator(current, *this);
+        return scapeGoatTree<T>::Iterator(current, root);
 
     if (current->value_ < value)
         return searchHelper(root, current->right_, value);
@@ -500,23 +500,23 @@ void scapeGoatTree<T>::deleteTree(Node<T> *root)
 template <typename T>
 typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::begin()
 {
-    return scapeGoatTree<T>::Iterator(minNode, *this);
+    return scapeGoatTree<T>::Iterator(minNode, root);
 }
 
 template <typename T>
 typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::end()
 {
-    return scapeGoatTree<T>::Iterator(nullptr, *this);
+    return scapeGoatTree<T>::Iterator(nullptr, root);
 }
 
 template <typename T>
 typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rbegin()
 {
-    return scapeGoatTree<T>::revIterator(maxNode, *this);
+    return scapeGoatTree<T>::revIterator(maxNode, root);
 }
 
 template <typename T>
 typename scapeGoatTree<T>::revIterator scapeGoatTree<T>::rend()
 {
-    return scapeGoatTree<T>::revIterator(nullptr, *this);
+    return scapeGoatTree<T>::revIterator(nullptr, root);
 }

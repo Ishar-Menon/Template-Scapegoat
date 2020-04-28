@@ -6,7 +6,6 @@ class scapeGoatTree<T>::Iterator
 {
 private:
 	Node<T> *node_it_, *root;
-	scapeGoatTree<T> &parent_;
 
 public:
 	using iterator_category = bidirectional_iterator_tag;
@@ -14,7 +13,7 @@ public:
 	using difference_type = int;
 	using pointer = T *;
 	using reference = T &;
-	explicit Iterator(Node<T> *node_it, scapeGoatTree<T> &parent) : node_it_(node_it), root(parent.root), parent_(parent) {}
+	explicit Iterator(Node<T> *node_it, Node<T> *root) : node_it_(node_it), root(root) {}
 	bool operator==(const Iterator &rhs) const { return node_it_ == rhs.node_it_; }
 	bool operator!=(const Iterator &rhs) const { return !(*this == rhs); }
 	reference operator*() { return node_it_->value_; }
@@ -29,7 +28,6 @@ class scapeGoatTree<T>::revIterator
 {
 private:
 	Node<T> *node_it_, *root;
-	scapeGoatTree<T> &parent_;
 
 public:
 	using iterator_category = bidirectional_iterator_tag;
@@ -37,7 +35,7 @@ public:
 	using difference_type = int;
 	using pointer = T *;
 	using reference = T &;
-	explicit revIterator(Node<T> *node_it, scapeGoatTree<T> &parent) : node_it_(node_it), root(parent.root), parent_(parent) {}
+	explicit revIterator(Node<T> *node_it, Node<T> *root) : node_it_(node_it), root(root) {}
 	bool operator==(const revIterator &rhs) const { return node_it_ == rhs.node_it_; }
 	bool operator!=(const revIterator &rhs) const { return !(*this == rhs); }
 	reference operator*() { return node_it_->value_; }
@@ -66,7 +64,7 @@ template <typename T>
 typename scapeGoatTree<T>::Iterator &scapeGoatTree<T>::Iterator::operator--()
 {
 	if (node_it_ == nullptr)
-		node_it_ = parent_.maxNode;
+		node_it_ = scapeGoatTree<T>::maxValue(root);
 	else
 		node_it_ = scapeGoatTree<T>::inorder_predecessor(node_it_, root);
 	return *this;
@@ -99,7 +97,7 @@ template <typename T>
 typename scapeGoatTree<T>::revIterator &scapeGoatTree<T>::revIterator::operator--()
 {
 	if (node_it_ == nullptr)
-		node_it_ = parent_.minNode;
+		node_it_ = scapeGoatTree<T>::minValue(root);
 	else
 		node_it_ = scapeGoatTree<T>::inorder_successor(node_it_, root);
 	return *this;
