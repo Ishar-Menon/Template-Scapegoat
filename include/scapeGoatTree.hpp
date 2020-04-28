@@ -32,8 +32,8 @@ class scapeGoatTree
 {
 private:
     Node<T> *root;
-    Node<T> *minNode, *maxNode;
     int numberOfNodes, maxNumberOfNodes; // numberOfNodes <= maxNumberOfNodes <= 2*numberOfNodes
+    Node<T> *minNode, *maxNode;
     class Iterator;
     class revIterator;
     int insertBSTwithdepth(Node<T> *node, vector<Node<T> *> &path);
@@ -58,7 +58,7 @@ private:
 
 public:
     scapeGoatTree()
-        : numberOfNodes(0), maxNumberOfNodes(0), root(nullptr), minNode(nullptr), maxNode(nullptr)
+        : root(nullptr), numberOfNodes(0), maxNumberOfNodes(0), minNode(nullptr), maxNode(nullptr)
     {
     }
     scapeGoatTree(const scapeGoatTree &rhs)

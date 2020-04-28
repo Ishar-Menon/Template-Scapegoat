@@ -1,4 +1,5 @@
 #include "scapeGoatTree.hpp"
+#include "tests.hpp"
 
 void inorder(scapeGoatTree<int> &tree)
 {
@@ -22,7 +23,7 @@ void inorder_reverse(scapeGoatTree<int> &tree)
     cout << endl;
 }
 
-int main()
+void test_0()
 {
     scapeGoatTree<int> tree;
     tree.insert(10);
@@ -66,5 +67,4 @@ int main()
     tree2.display();
     cout << "tree3\n";
     tree3.display();
-    return 0;
 }
