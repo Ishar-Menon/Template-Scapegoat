@@ -33,8 +33,8 @@ class scapeGoatTree
 {
 private:
     Node<T> *root;
-    int numberOfNodes;
-    int maxNumberOfNodes; // numberOfNodes <= maxNumberOfNodes <= 2*numberOfNodes
+    Node<T> *minNode, *maxNode;
+    int numberOfNodes, maxNumberOfNodes; // numberOfNodes <= maxNumberOfNodes <= 2*numberOfNodes
     class Iterator;
     class revIterator;
     int insertBSTwithdepth(Node<T> *node);
@@ -49,18 +49,41 @@ private:
     void displayHelper(Node<T> *node, int level);
     void printBT(const std::string &prefix, const Node<T> *node, bool isLeft);
     void setMinMax();
-    Node<T> *minNode;
-    Node<T> *maxNode;
     static Node<T> *inorder_successor(Node<T> *current, Node<T> *root);
     static Node<T> *minValue(Node<T> *root);
     static Node<T> *inorder_predecessor(Node<T> *current, Node<T> *root);
     static Node<T> *maxValue(Node<T> *root);
     static Iterator searchHelper(Node<T> *root, Node<T> *current, int value);
+    static Node<T> *duplicateTree(Node<T> *root);
+    static void deleteTree(Node<T> *root);
 
 public:
     scapeGoatTree()
         : numberOfNodes(0), maxNumberOfNodes(0), root(nullptr), minNode(nullptr), maxNode(nullptr)
     {
+    }
+    scapeGoatTree(const scapeGoatTree &rhs)
+        : numberOfNodes(rhs.numberOfNodes), maxNumberOfNodes(rhs.maxNumberOfNodes)
+    {
+        root = duplicateTree(rhs.root);
+        setMinMax();
+    }
+    scapeGoatTree &operator=(scapeGoatTree tmp)
+    {
+        swap(*this, tmp);
+        return *this;
+    }
+    ~scapeGoatTree()
+    {
+        deleteTree(root);
+    }
+    friend void swap(scapeGoatTree &first, scapeGoatTree &second)
+    {
+        std::swap(first.root, second.root);
+        std::swap(first.minNode, second.minNode);
+        std::swap(first.maxNode, second.maxNode);
+        std::swap(first.numberOfNodes, second.numberOfNodes);
+        std::swap(first.maxNumberOfNodes, second.maxNumberOfNodes);
     }
 
     void remove(int value);
@@ -435,6 +458,31 @@ Node<T> *scapeGoatTree<T>::inorder_predecessor(Node<T> *current, Node<T> *root)
             break;
     }
     return predecessor;
+}
+
+template <typename T>
+Node<T> *scapeGoatTree<T>::duplicateTree(Node<T> *root)
+{
+    if (root == nullptr)
+        return nullptr;
+    Node<T> *newRoot = new Node<T>(*root);
+    newRoot->right_ = duplicateTree(root->right_);
+    newRoot->left_ = duplicateTree(root->left_);
+    if (newRoot->right_)
+        newRoot->right_->parent_ = newRoot;
+    if (newRoot->left_)
+        newRoot->left_->parent_ = newRoot;
+    return newRoot;
+}
+
+template <typename T>
+void scapeGoatTree<T>::deleteTree(Node<T> *root)
+{
+    if (root == nullptr)
+        return;
+    deleteTree(root->left_);
+    deleteTree(root->right_);
+    delete root;
 }
 
 #include "iterators.hpp"
