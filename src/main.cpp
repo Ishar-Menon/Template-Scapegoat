@@ -11,7 +11,8 @@ int main()
 		 << "1. Basic Operations\n"
 		 << "2. Iterators, Copy-ctor, and copy assignment\n"
 		 << "3. Generic algorithms\n"
-		 << "4. Random test set\n"
+		 << "4. Complex class test\n"
+		 << "5. Random test set\n"
 		 << "\nEnter choice: ";
 	cin >> choice;
 	switch (choice)
@@ -24,6 +25,9 @@ int main()
 		break;
 	case '3':
 		generic_algo();
+		break;
+	case '4':
+		complex_tests();
 		break;
 	default:
 		test_0();

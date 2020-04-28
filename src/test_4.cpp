@@ -1,7 +1,10 @@
 #include "complex.hpp"
-#include "../include/scapeGoatTree.hpp"
-int main()
+#include "scapeGoatTree.hpp"
+#include "tests.hpp"
+
+void complex_tests()
 {
+    cout << "\n--- User defined complex class test ---\n\n";
     scapeGoatTree<Complex> tree;
     cout << "Inserting (10 + 5i)\n";
     tree.insert(Complex(10, 5));
@@ -21,16 +24,16 @@ int main()
     tree.insert(Complex(5, 6));
     cout << "Inserting (9 + -3i)\n";
     tree.insert(Complex(9, -3));
-    cout << "The current tree \n";
+    cout << "\nThe current tree \n";
     tree.display();
     cout << "Inserting (5 + 9i)\n";
     tree.insert(Complex(5, 9));
     cout << "Rebuilding...\n";
     tree.display();
-    cout << "Searching for 8 + 5i...\n";
+    cout << "\nSearching for 8 + 5i...\n";
     auto itr1 = tree.search(Complex(8, 5));
     cout << "Value 8 + 5i " << (itr1 == tree.end() ? "NOTFOUND" : "FOUND") << endl;
-    cout << "Searching for 14 + -20i...\n";
+    cout << "\nSearching for 14 + -20i...\n";
     auto itr2 = tree.search(Complex(14, -20));
     cout << "Value 14 + -20i " << (itr2 == tree.end() ? "NOTFOUND" : "FOUND") << endl;
     cout << "Removing 5 + 9i \n";
@@ -52,5 +55,4 @@ int main()
     tree.remove(Complex(1, 0));
     cout << "Rebuilding...\n";
     tree.display();
-    return 0;
 }
