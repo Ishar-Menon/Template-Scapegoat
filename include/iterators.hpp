@@ -14,7 +14,7 @@ public:
 	using difference_type = int;
 	using pointer = T *;
 	using reference = T &;
-	explicit Iterator(Node<T> *node_it, scapeGoatTree<T> &parent) : node_it_(node_it), parent_(parent), root(parent.root) {}
+	explicit Iterator(Node<T> *node_it, scapeGoatTree<T> &parent) : node_it_(node_it), root(parent.root), parent_(parent) {}
 	bool operator==(const Iterator &rhs) const { return node_it_ == rhs.node_it_; }
 	bool operator!=(const Iterator &rhs) const { return !(*this == rhs); }
 	reference operator*() { return node_it_->value_; }
@@ -37,7 +37,7 @@ public:
 	using difference_type = int;
 	using pointer = T *;
 	using reference = T &;
-	explicit revIterator(Node<T> *node_it, scapeGoatTree<T> &parent) : node_it_(node_it), parent_(parent), root(parent.root) {}
+	explicit revIterator(Node<T> *node_it, scapeGoatTree<T> &parent) : node_it_(node_it), root(parent.root), parent_(parent) {}
 	bool operator==(const revIterator &rhs) const { return node_it_ == rhs.node_it_; }
 	bool operator!=(const revIterator &rhs) const { return !(*this == rhs); }
 	reference operator*() { return node_it_->value_; }
