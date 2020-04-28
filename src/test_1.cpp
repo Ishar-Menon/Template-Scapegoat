@@ -37,6 +37,12 @@ void basic_operations()
     tree.insert(6);
     cout << "Rebuilding tree...\n";
     tree.display();
+    cout << "Searching for 8...\n";
+    auto itr1 = tree.search(8);
+    cout << "Value 8 " << (itr1 == tree.end() ? "NOTFOUND" : "FOUND") << endl;
+    cout << "Searching for 14...\n";
+    auto itr2 = tree.search(14);
+    cout << "Value 14 " << (itr2 == tree.end() ? "NOTFOUND" : "FOUND") << endl;
     cout << "Removing 6 \n";
     tree.remove(6);
     cout << "Removing 11 \n";

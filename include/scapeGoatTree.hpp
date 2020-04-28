@@ -52,7 +52,7 @@ private:
     static Node<T> *minValue(Node<T> *root);
     static Node<T> *inorder_predecessor(Node<T> *current, Node<T> *root);
     static Node<T> *maxValue(Node<T> *root);
-    static Iterator searchHelper(Node<T> *root, Node<T> *current, int value);
+    Iterator searchHelper(Node<T> *root, Node<T> *current, int value);
     static Node<T> *duplicateTree(Node<T> *root);
     static void deleteTree(Node<T> *root);
 
@@ -364,7 +364,7 @@ template <typename T>
 typename scapeGoatTree<T>::Iterator scapeGoatTree<T>::searchHelper(Node<T> *root, Node<T> *current, int value)
 {
     if (current == nullptr || current->value_ == value)
-        return scapeGoatTree<T>::Iterator(current, root);
+        return scapeGoatTree<T>::Iterator(current, *this);
 
     if (current->value_ < value)
         return searchHelper(root, current->right_, value);
