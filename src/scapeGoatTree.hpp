@@ -14,16 +14,15 @@ private:
     T value_;
     Node<T> *left_;
     Node<T> *right_;
-    Node<T> *parent_;
     friend class scapeGoatTree<T>;
 
 public:
-    Node(T value, Node<T> *left = nullptr, Node<T> *right = nullptr, Node<T> *parent = nullptr)
-        : value_(value), left_(left), right_(right), parent_(parent)
+    Node(T value, Node<T> *left = nullptr, Node<T> *right = nullptr)
+        : value_(value), left_(left), right_(right)
     {
     }
     Node(Node &rhs)
-        : value_(rhs.value_), left_(rhs.left_), right_(rhs.right_), parent_(rhs.parent_)
+        : value_(rhs.value_), left_(rhs.left_), right_(rhs.right_)
     {
     }
 };
@@ -156,7 +155,6 @@ int scapeGoatTree<T>::insertBSTwithdepth(Node<T> *node, vector<Node<T> *> &path)
             maxNode = node;
         }
     }
-    node->parent_ = prev;
     numberOfNodes += 1;
     maxNumberOfNodes += 1;
 
@@ -279,14 +277,7 @@ void scapeGoatTree<T>::insert(int value)
     if (nodeDepth > 0 && nodeDepth > log3by2(maxNumberOfNodes))
     {
         // Find scapegoat and rebuild
-        cout << "Rebuil at node value : " << newNode->value_ << endl;
-        for (int i = 0; i < path.size(); i++)
-        {
-            cout << path[i]->value_ << " ";
-        }
-        cout << endl;
         int index = findScapeGoat(newNode, path);
-        cout << "Index is " << index << endl;
         rebuild(path, index);
     }
 }
@@ -490,10 +481,7 @@ Node<T> *scapeGoatTree<T>::duplicateTree(Node<T> *root)
     Node<T> *newRoot = new Node<T>(*root);
     newRoot->right_ = duplicateTree(root->right_);
     newRoot->left_ = duplicateTree(root->left_);
-    if (newRoot->right_)
-        newRoot->right_->parent_ = newRoot;
-    if (newRoot->left_)
-        newRoot->left_->parent_ = newRoot;
+
     return newRoot;
 }
 
