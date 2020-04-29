@@ -12,7 +12,8 @@ int main()
 		 << "2. Iterators, Copy-ctor, and copy assignment\n"
 		 << "3. Generic algorithms\n"
 		 << "4. Complex class test\n"
-		 << "5. Random test set\n"
+		 << "5. MyDate class test\n"
+		 << "6. Random test set\n"
 		 << "\nEnter choice: ";
 	cin >> choice;
 	switch (choice)
@@ -28,6 +29,9 @@ int main()
 		break;
 	case '4':
 		complex_tests();
+		break;
+	case '5':
+		myDate_tests();
 		break;
 	default:
 		test_0();
