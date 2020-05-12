@@ -8,7 +8,7 @@ Example: `g++ -I./include test.cpp -g`
 ## Running tests
 
 Prereqiusites:
-- c++11 or higher
+- c++14 or higher
 - gnu-sed for makefile
    
 ### Compiling
